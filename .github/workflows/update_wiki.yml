@@ -33,6 +33,7 @@ jobs:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: |
           python scripts/generate_ai_wiki.py
+          python scripts/organize_wiki.py
 
       - name: Push to Wiki
         run: |
