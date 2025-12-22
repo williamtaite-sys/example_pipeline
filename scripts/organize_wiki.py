@@ -6,6 +6,21 @@ from google import genai
 MODEL_NAME = "gemini-2.5-flash"
 OUTPUT_DIR = "wiki_content"
 
+def clean_markdown_response(text):
+    """Removes markdown code fences if present."""
+    if not text:
+        return ""
+    text = text.strip()
+    if text.startswith("```markdown"):
+        text = text[11:]
+    elif text.startswith("```"):
+        text = text[3:]
+    
+    if text.endswith("```"):
+        text = text[:-3]
+    
+    return text.strip()
+
 def read_markdown_files():
     """Reads all module documentation files."""
     docs = {}
@@ -43,7 +58,7 @@ def generate_home_page(client, docs):
         model=MODEL_NAME,
         contents=prompt
     )
-    return response.text
+    return clean_markdown_response(response.text)
 
 def generate_sidebar(client, docs):
     """Generates a _Sidebar.md for navigation."""
@@ -69,7 +84,7 @@ def generate_sidebar(client, docs):
         model=MODEL_NAME,
         contents=prompt
     )
-    return response.text
+    return clean_markdown_response(response.text)
 
 def main():
     if not os.environ.get("GOOGLE_API_KEY"):

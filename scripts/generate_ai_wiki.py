@@ -49,7 +49,22 @@ def generate_docs_for_code(code_content, filename):
         model=MODEL_NAME,
         contents=prompt
     )
-    return response.text
+    return clean_markdown_response(response.text)
+
+def clean_markdown_response(text):
+    """Removes markdown code fences if present."""
+    if not text:
+        return ""
+    text = text.strip()
+    if text.startswith("```markdown"):
+        text = text[11:]
+    elif text.startswith("```"):
+        text = text[3:]
+    
+    if text.endswith("```"):
+        text = text[:-3]
+    
+    return text.strip()
 
 def main():
     # 1. Update Repo
