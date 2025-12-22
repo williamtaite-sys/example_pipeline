@@ -88,8 +88,7 @@ def main():
 
     # 4. Create Home.md
     with open(os.path.join(OUTPUT_DIR, "Home.md"), "w") as f:
-        f.write("\n---
-".join(combined_docs))
+        f.write("\n---\n".join(combined_docs))
 
     print(f"AI Documentation generated in {OUTPUT_DIR}/")
     print("To publish, run your git wiki publish commands or the GitHub Action.")
