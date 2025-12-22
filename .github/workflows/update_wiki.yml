@@ -35,8 +35,26 @@ jobs:
           python scripts/generate_ai_wiki.py
 
       - name: Push to Wiki
-        uses: SwiftDocOrg/github-wiki-publish-action@v1
-        with:
-          path: "wiki_content"
-        env:
-          GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Configure Git
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          
+          # Clone the Wiki (it lives at .wiki.git)
+          # We use the GITHUB_TOKEN for auth
+          git clone "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git" wiki_repo
+          
+          # Copy generated content into the wiki repo
+          cp -r wiki_content/* wiki_repo/
+          
+          # Commit and Push
+          cd wiki_repo
+          git add .
+          
+          # Only commit if there are changes
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Update Wiki documentation [skip ci]"
+            git push "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git"
+          fi
