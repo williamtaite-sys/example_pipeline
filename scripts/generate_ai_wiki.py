@@ -5,7 +5,7 @@ from google import genai
 
 # Configuration
 # Ensure you set the GOOGLE_API_KEY environment variable
-MODEL_NAME = "gemini-2.0-flash" 
+MODEL_NAME = "gemini-2.5-flash" 
 SOURCE_DIR = "."
 OUTPUT_DIR = "wiki_content"
 FILES_TO_PROCESS = ["hello.py", "data_processor.py"]
