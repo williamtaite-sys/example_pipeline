@@ -24,9 +24,15 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Generate Documentation
+      - name: Install Dependencies
         run: |
-          python scripts/generate_wiki.py
+          pip install -r requirements.txt
+
+      - name: Generate AI Documentation
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: |
+          python scripts/generate_ai_wiki.py
 
       - name: Push to Wiki
         uses: SwiftDocOrg/github-wiki-publish-action@v1
