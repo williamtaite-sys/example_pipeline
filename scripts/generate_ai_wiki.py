@@ -1,11 +1,11 @@
 import os
 import sys
 import subprocess
-import google.generativeai as genai
+from google import genai
 
 # Configuration
 # Ensure you set the GOOGLE_API_KEY environment variable
-MODEL_NAME = "gemini-1.5-flash"
+MODEL_NAME = "gemini-2.0-flash" 
 SOURCE_DIR = "."
 OUTPUT_DIR = "wiki_content"
 FILES_TO_PROCESS = ["hello.py", "data_processor.py"]
@@ -21,8 +21,10 @@ def git_pull():
 
 def generate_docs_for_code(code_content, filename):
     """Uses Gemini to generate documentation for the code."""
-    model = genai.GenerativeModel(MODEL_NAME)
     
+    # Initialize the client with the API key from the environment
+    client = genai.Client(api_key=os.environ.get("GOOGLE_API_KEY"))
+
     prompt = f"""
     You are a technical documentation expert. 
     
@@ -42,7 +44,11 @@ def generate_docs_for_code(code_content, filename):
     ```
     """
     
-    response = model.generate_content(prompt)
+    # Call the API using the new SDK structure
+    response = client.models.generate_content(
+        model=MODEL_NAME,
+        contents=prompt
+    )
     return response.text
 
 def main():
@@ -82,7 +88,8 @@ def main():
 
     # 4. Create Home.md
     with open(os.path.join(OUTPUT_DIR, "Home.md"), "w") as f:
-        f.write("\n---\n".join(combined_docs))
+        f.write("\n---
+".join(combined_docs))
 
     print(f"AI Documentation generated in {OUTPUT_DIR}/")
     print("To publish, run your git wiki publish commands or the GitHub Action.")
