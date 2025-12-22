@@ -8,7 +8,7 @@ import google.generativeai as genai
 MODEL_NAME = "gemini-1.5-flash"
 SOURCE_DIR = "."
 OUTPUT_DIR = "wiki_content"
-FILES_TO_PROCESS = ["hello.py"]
+FILES_TO_PROCESS = ["hello.py", "data_processor.py"]
 
 def git_pull():
     """Pulls the latest changes from the remote repository."""
